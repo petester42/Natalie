@@ -41,6 +41,22 @@ override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
 
 ...it could be `switch { }` statement, but [it's broken](https://twitter.com/krzyzanowskim/status/611686899732869121).
 
+###Enumerate Nibs
+Generated enum Nibs with convenient interface (drop-in replacement for UINib).
+
+```swift
+struct Nibs {
+    struct LaunchScreen {...}
+    struct TableViewCell {...}
+    struct RoundedButton {...}
+    ...
+```
+
+Instantiate view from nib
+```swift
+let view = Nibs.RoundedButton.view
+```
+
 ###Segues
 
 Perform segue
@@ -156,7 +172,7 @@ if [ -f $NATALIE_PATH ]
 then
 	BASE_PATH="$PROJECT_DIR/$PROJECT_NAME"
 	OUTPUT_PATH="$BASE_PATH/Storyboards.swift"
-	if [ ! -e "$OUTPUT_PATH" ] || [ -n "$(find "$BASE_PATH" -type f -name "*.storyboard" -newer "$OUTPUT_PATH" -print -quit)" ]; then
+	if [ ! -e "$OUTPUT_PATH" ] || [ -n "$(find "$BASE_PATH" -type f -name "*.storyboard" -o -name "*.xib" -newer "$OUTPUT_PATH" -print -quit)" ]; then
 		echo "Natalie Generator: Generated Swift is out-of-date; re-generating..."
 	    "$NATALIE_PATH" "$PROJECT_DIR/$PROJECT_NAME" > "$PROJECT_DIR/$PROJECT_NAME/Storyboards.swift"
 		echo "Natalie Generator: Done."

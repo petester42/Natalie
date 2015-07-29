@@ -5,39 +5,6 @@
 
 import UIKit
 
-//MARK: - Storyboards
-struct Storyboards {
-
-    struct Main {
-
-        static let identifier = "Main"
-
-        static var storyboard: UIStoryboard {
-            return UIStoryboard(name: self.identifier, bundle: nil)
-        }
-
-        static func instantiateInitialViewController() -> UINavigationController {
-            return self.storyboard.instantiateInitialViewController() as! UINavigationController
-        }
-
-        static func instantiateViewControllerWithIdentifier(identifier: String) -> UIViewController {
-            return self.storyboard.instantiateViewControllerWithIdentifier(identifier)
-        }
-
-        static func instantiateMainViewController() -> MainViewController {
-            return self.storyboard.instantiateViewControllerWithIdentifier("MainViewController") as! MainViewController
-        }
-
-        static func instantiateSecondViewController() -> ScreenTwoViewController {
-            return self.storyboard.instantiateViewControllerWithIdentifier("secondViewController") as! ScreenTwoViewController
-        }
-
-        static func instantiateScreenOneViewController() -> ScreenOneViewController {
-            return self.storyboard.instantiateViewControllerWithIdentifier("Screen One ViewController") as! ScreenOneViewController
-        }
-    }
-}
-
 //MARK: - ReusableKind
 enum ReusableKind: String, CustomStringConvertible {
     case TableViewCell = "tableViewCell"
@@ -71,19 +38,27 @@ public protocol SegueProtocol: IdentifiableProtocol {
 }
 
 public func ==<T: SegueProtocol, U: SegueProtocol>(lhs: T, rhs: U) -> Bool {
-   return lhs.identifier == rhs.identifier
+    return lhs.identifier == rhs.identifier
 }
 
 public func ~=<T: SegueProtocol, U: SegueProtocol>(lhs: T, rhs: U) -> Bool {
-   return lhs.identifier == rhs.identifier
+    return lhs.identifier == rhs.identifier
 }
 
 public func ==<T: SegueProtocol>(lhs: T, rhs: String) -> Bool {
-   return lhs.identifier == rhs
+    return lhs.identifier == rhs
 }
 
 public func ~=<T: SegueProtocol>(lhs: T, rhs: String) -> Bool {
-   return lhs.identifier == rhs
+    return lhs.identifier == rhs
+}
+
+public func ==<T: SegueProtocol>(lhs: String, rhs: T) -> Bool {
+    return lhs == rhs.identifier
+}
+
+public func ~=<T: SegueProtocol>(lhs: String, rhs: T) -> Bool {
+    return lhs == rhs.identifier
 }
 
 //MARK: - ReusableViewProtocol
@@ -92,7 +67,7 @@ public protocol ReusableViewProtocol: IdentifiableProtocol {
 }
 
 public func ==<T: ReusableViewProtocol, U: ReusableViewProtocol>(lhs: T, rhs: U) -> Bool {
-   return lhs.identifier == rhs.identifier
+    return lhs.identifier == rhs.identifier
 }
 
 //MARK: - Protocol Implementation
@@ -112,18 +87,17 @@ extension UITableViewCell: ReusableViewProtocol {
 //MARK: - UIViewController extension
 extension UIViewController {
     func performSegue<T: SegueProtocol>(segue: T, sender: AnyObject?) {
-       if let identifier = segue.identifier {
-           performSegueWithIdentifier(identifier, sender: sender)
-       }
+        if let identifier = segue.identifier {
+            performSegueWithIdentifier(identifier, sender: sender)
+        }
     }
 
     func performSegue<T: SegueProtocol>(segue: T) {
-       performSegue(segue, sender: nil)
+        performSegue(segue, sender: nil)
     }
 }
 
 //MARK: - UICollectionView
-
 extension UICollectionView {
 
     func dequeueReusableCell<T: ReusableViewProtocol>(reusable: T, forIndexPath: NSIndexPath!) -> UICollectionViewCell? {
@@ -152,8 +126,8 @@ extension UICollectionView {
         }
     }
 }
-//MARK: - UITableView
 
+//MARK: - UITableView
 extension UITableView {
 
     func dequeueReusableCell<T: ReusableViewProtocol>(reusable: T, forIndexPath: NSIndexPath!) -> UITableViewCell? {
@@ -183,6 +157,38 @@ extension UITableView {
     }
 }
 
+//MARK: - Storyboards
+struct Storyboards {
+
+    struct Main {
+
+        static let identifier = "Main"
+
+        static var storyboard: UIStoryboard {
+            return UIStoryboard(name: self.identifier, bundle: nil)
+        }
+
+        static func instantiateInitialViewController() -> UINavigationController {
+            return self.storyboard.instantiateInitialViewController() as! UINavigationController
+        }
+
+        static func instantiateViewControllerWithIdentifier(identifier: String) -> UIViewController {
+            return self.storyboard.instantiateViewControllerWithIdentifier(identifier)
+        }
+
+        static func instantiateMainViewController() -> MainViewController {
+            return self.storyboard.instantiateViewControllerWithIdentifier("MainViewController") as! MainViewController
+        }
+
+        static func instantiateSecondViewController() -> ScreenTwoViewController {
+            return self.storyboard.instantiateViewControllerWithIdentifier("secondViewController") as! ScreenTwoViewController
+        }
+
+        static func instantiateScreenOneViewController() -> ScreenOneViewController {
+            return self.storyboard.instantiateViewControllerWithIdentifier("Screen One ViewController") as! ScreenOneViewController
+        }
+    }
+}
 
 //MARK: - MainViewController
 extension UIStoryboardSegue {
@@ -231,7 +237,6 @@ extension MainViewController {
         var identifier: String? { return self.description } 
         var description: String { return self.rawValue }
     }
-
 }
 
 //MARK: - ScreenTwoViewController
@@ -257,8 +262,24 @@ extension ScreenTwoViewController {
         var identifier: String? { return self.description } 
         var description: String { return self.rawValue }
     }
-
 }
 
-
 //MARK: - ScreenOneViewController
+
+//MARK: - Nibs
+struct Nibs {
+
+    struct LaunchScreen {
+
+        static let identifier = "LaunchScreen"
+
+        static var nib: UINib {
+            return UINib(nibName: self.identifier, bundle: nil)
+        }
+
+        static var view: UIView? {
+            return nib.instantiateWithOwner(nil, options: nil).first as? UIView
+        }
+    }
+}
+
