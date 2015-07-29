@@ -277,8 +277,8 @@ struct Nibs {
             return UINib(nibName: self.identifier, bundle: nil)
         }
 
-        static var view: UIView? {
-            return nib.instantiateWithOwner(nil, options: nil).first as? UIView
+        static func instantiateView(withOwner owner: AnyObject?) -> UIView? {
+            return nib.instantiateWithOwner(owner, options: nil).first as? UIView
         }
     }
 }
